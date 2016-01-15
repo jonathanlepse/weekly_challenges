@@ -7,23 +7,16 @@ class Translation
   
   def self.of_rna(strand)
     
-    raise "Invalid Codon Error" unless valid?(strand)
+    raise InvalidCodonError, "Strand must contain codon strings only" unless valid?(strand)
     
-    range_start = 0
-    range_end = 2
+    codons = string_seperator(strand) 
+    index = 0
     seperation_of_codons = strand.length / CODON_LENGTH
-    num = 0 
-    codons = []
     
     seperation_of_codons.times do
-      codons[num] = strand[range_start..range_end]
-      range_start +=3
-      range_end +=3
-      codons[num +=1]
-    end
-    
-    codons.map! do |element|
-      convert_to_protein_name(element)
+      protein_name = convert_to_protein_name(codons[index])
+      index +=1
+      codons << protein_name
     end
     codons
   end
@@ -45,9 +38,14 @@ class Translation
   end
  
   def self.valid?(strand)
-    strand_arr = strand.chars.each_slice(3).map(&:join)
-    return true if strand_arr == (convert_to_protein_name(strand_arr[0]))
+    return true if string_seperator(strand).first == (convert_to_protein_name(string_seperator(strand).first))
     return false
+  end
+  
+  def self.string_seperator(strand)
+    strand_arr = []
+    strand_arr = strand.chars.each_slice(3).map(&:join)
+    strand_arr
   end
 end
 
