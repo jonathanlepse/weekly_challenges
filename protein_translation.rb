@@ -1,5 +1,6 @@
 class Translation
   CODON_LENGTH = 3 # b/c each codon is 3 character long
+  PROTEIN_HASH = {'AUG' => 'Methionine', 'UUU' => 'Phenylalanine', 'UUC' => 'Phenylalanine', 'UUA'=> 'Leucine', 'UUG' => 'Leucine', 'UCU'=>'Serine', 'UCC'=>'Serine', 'UCA'=>'Serine', 'UCG'=> 'Serine', 'UAU'=>'Tyrosine', 'UAC'=> 'Tyrosine', 'UGU'=>'Cystine', 'UGC'=>'Cystine', 'UGG'=> 'Tryptophan', 'UAA'=> 'STOP', 'UAG'=> 'STOP', 'UGA'=> 'STOP'}
 
   def self.of_codon(string)
    convert_to_protein_name(string)
@@ -7,7 +8,7 @@ class Translation
   
   def self.of_rna(strand)
     
-    raise InvalidCodonError, "Strand must contain codon strings only" unless valid?(strand)
+    raise (InvalidCodonError), "Strand must contain codon strings only" unless valid?(strand)
     
     codons = string_seperator(strand) 
     index = 0
@@ -38,7 +39,7 @@ class Translation
   end
  
   def self.valid?(strand)
-    return true if string_seperator(strand).first == (convert_to_protein_name(string_seperator(strand).first))
+    return true if string_seperator(strand).first == PROTEIN_HASH.keys.any? #include?(string_seperator(strand).any?)
     return false
   end
   
@@ -47,6 +48,7 @@ class Translation
     strand_arr = strand.chars.each_slice(3).map(&:join)
     strand_arr
   end
+  
 end
 
 
